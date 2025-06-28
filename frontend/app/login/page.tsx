@@ -18,19 +18,20 @@ export default function LoginPage() {
     setLoading(true);
     setError(null);
 
-    const res = await signIn("credentials", {
-      redirect: false,
-      email: form.email,
-      password: form.password,
+    const res = await fetch("http://localhost:5000/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(form),
     });
+    const data = await res.json();
 
-    if (res?.error) {
-      setError("Email və ya şifrə yanlışdır");
-      setLoading(false);
+    if (!res.ok) {
+      setError(data.error || "Email və ya şifrə yanlışdır");
       return;
     }
 
-    // Uğurlu login olduqda ana səhifəyə yönləndir
+    // Burada token-i localStorage və ya cookie-də saxlaya bilərsiniz
+    localStorage.setItem("token", data.token)
     router.push("/");
   };
 

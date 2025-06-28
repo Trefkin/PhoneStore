@@ -1,10 +1,27 @@
 "use client";
 
 import Link from "next/link";
-import { useSession, signOut } from "next-auth/react";
+import { useEffect, useState } from "react";
 
 export default function Header() {
-  const { data: session, status } = useSession();
+  const [user, setUser] = useState<{ email: string } | null>(null);
+
+  useEffect(() => {
+    // Token və user məlumatını localStorage-dan oxu
+    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    const userData = typeof window !== "undefined" ? localStorage.getItem("user") : null;
+    if (token && userData) {
+      setUser(JSON.parse(userData));
+    } else {
+      setUser(null);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    window.location.href = "/login";
+  };
 
   return (
     <header className="bg-white shadow mb-6">
@@ -16,16 +33,16 @@ export default function Header() {
           <Link href="/" className="hover:text-blue-600 font-medium">
             Mağaza
           </Link>
-          {session?.user ? (
+          {user ? (
             <>
               <Link href="/create" className="hover:text-blue-600 font-medium">
                 Telefon əlavə et
               </Link>
               <span className="text-gray-600 text-sm mr-2">
-                {session.user.email}
+                {user.email}
               </span>
               <button
-                onClick={() => signOut({ callbackUrl: "/login" })}
+                onClick={handleLogout}
                 className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm"
               >
                 Çıxış
