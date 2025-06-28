@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import AuthProvider from "../components/AuthProvider";
 import Header from "../components/Header";
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="az">
       <body>
