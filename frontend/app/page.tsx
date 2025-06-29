@@ -6,15 +6,7 @@ import { useAuthStore } from "@/store/authStore";
 import StatBox from "../components/StatBox";
 import { FaBox, FaCheckCircle, FaClock, FaTimesCircle } from "react-icons/fa";
 import "./globals.css";
-type Phone = {
-  id: string;
-  name: string;
-  brand: string;
-  price: number;
-  description?: string;
-  imageUrl?: string;
-  status?: "active" | "inactive" | "pending";
-};
+import { Phone } from "../types/item";
 export default function HomePage() {
   const { phones, setPhones, removePhone } = useItemStore();
   const { user, setUser } = useAuthStore();
@@ -52,7 +44,7 @@ const avgPrice =
   }, [setPhones]);
 
   // Telefonu sil
-  const handleDelete = async (id: any) => {
+  const handleDelete = async (id:string|number) => {
     if (!confirm("Silinsin?")) return;
     const token = localStorage.getItem("token");
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/phones/${id}`, {
@@ -62,7 +54,7 @@ const avgPrice =
       },
     });
     if (res.ok) {
-      removePhone(id);
+      removePhone(id= id.toString());
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/phones`);
       const data = await res.json();
       setPhones(data);
@@ -109,27 +101,32 @@ const avgPrice =
         {phones.length === 0 && (
           <div className="col-span-full text-gray-500">Telefon yoxdur</div>
         )}
-        {phones.map((phone: any) => (
-          <PhoneCard
-            key={phone._id}
-            {...phone}
-            id={phone._id}
-            canEdit={
-              user &&
-              user.id &&
-              phone.userId._id &&
-              user.id.toString() === phone.userId._id?.toString()
-            }
-            onDelete={
-              user &&
-              user.id &&
-              phone.userId._id &&
-              user.id.toString() === phone.userId._id?.toString()
-                ? () => handleDelete(phone._id)
-                : undefined
-            }
-          />
-        ))}
+       {phones.map((phone: Phone) => (
+  <PhoneCard
+    key={phone._id}
+    id={phone._id}
+    name={phone.name}
+    brand={phone.brand}
+    price={phone.price}
+    description={phone.description}
+    imageUrl={phone.imageUrl}
+    status={phone.status}
+    canEdit={
+      !!user &&
+      !!user.id &&
+      !!phone.userId._id &&
+      user.id.toString() === phone.userId._id.toString()
+    }
+    onDelete={
+      user &&
+      user.id &&
+      phone.userId._id &&
+      user.id.toString() === phone.userId._id.toString()
+        ? () => handleDelete(phone._id)
+        : undefined
+    }
+  />
+))}
       </div>
     </div>
   );

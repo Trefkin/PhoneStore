@@ -1,11 +1,15 @@
-export interface Phone {
-  id: number;
+// types/item.ts
+export type Phone = {
+  _id: string;
+  id?: string; // Optional frontend alias
+  userId: {
+    _id: string;
+    // other user properties if needed
+  };
   name: string;
   brand: string;
   price: number;
   description?: string;
   imageUrl?: string;
-  userId: string;
-  createdAt?: string;
-  updatedAt?: string;
-}
+  status?: "active" | "inactive" | "pending";
+};

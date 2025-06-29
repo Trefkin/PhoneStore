@@ -15,7 +15,7 @@ type FormValues = {
 export default function EditPhonePage() {
   const router = useRouter();
   const params = useParams();
-  const { user, setUser } = useAuthStore();
+  const {setUser } = useAuthStore();
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
   const [error, setError] = useState<string | null>(null);
