@@ -1,19 +1,21 @@
 
 
 const nextConfig = {
-  images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '**.domain.com', // subdomain wildcard
-      },
-      {
-        protocol: 'https',
-        hostname: 'another-domain.com',
-        pathname: '/uploads/**', // path uyğunlaşdırması
-      },
-    ],
-  },
-};
+  
+      images: {
+     remotePatterns: [
+       {
+         protocol: "https",
+         hostname: "frankfurt.apollo.olxcdn.com",
+         pathname: "/**",
+        },
+        {
+         protocol: "https",
+         hostname: "images.samsung.com",
+         pathname: "/**",
+       },
+      ]
+}
+}
 
 module.exports = nextConfig;
