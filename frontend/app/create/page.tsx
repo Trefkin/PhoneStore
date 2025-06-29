@@ -14,11 +14,11 @@ type FormValues = {
 
 export default function CreatePhonePage() {
   const router = useRouter();
-  const { user, setUser } = useAuthStore();
+  const {setUser} = useAuthStore();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<FormValues>();
+  const { register, handleSubmit, formState: { errors } } = useForm<FormValues>();
 
   useEffect(() => {
     const userData = localStorage.getItem("user");

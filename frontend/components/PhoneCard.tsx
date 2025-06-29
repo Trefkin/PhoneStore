@@ -1,8 +1,7 @@
 import Link from "next/link";
 import { FaMobileAlt } from "react-icons/fa";
 import { MdDelete, MdEdit } from "react-icons/md";
-import { HiOutlineDeviceTablet, HiOutlineDevicePhoneMobile } from "react-icons/hi2";
-
+import Image from "next/image";
 interface PhoneCardProps {
   id: number | string;
   name: string;
@@ -52,14 +51,18 @@ export default function PhoneCard({
         <span className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-blue-100 text-blue-500">
           {icon}
         </span>
-        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${statusObj.color}`}>
+        <span
+          className={`px-3 py-1 rounded-full text-xs font-semibold ${statusObj.color}`}
+        >
           {statusObj.text}
         </span>
       </div>
       {imageUrl ? (
-        <img
+        <Image
           src={imageUrl}
           alt={name}
+          width={200}
+          height={100}
           className="w-full h-24 object-contain rounded mb-2 bg-gray-50"
         />
       ) : (
@@ -70,7 +73,9 @@ export default function PhoneCard({
       <h3 className="text-lg font-semibold mb-1">{name}</h3>
       <div className="text-xs text-gray-500 mb-1">{brand}</div>
       {description && (
-        <div className="text-gray-500 text-xs mb-2 line-clamp-2">{description}</div>
+        <div className="text-gray-500 text-xs mb-2 line-clamp-2">
+          {description}
+        </div>
       )}
       <div className="flex items-center justify-between mt-auto">
         <div>

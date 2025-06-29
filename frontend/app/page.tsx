@@ -6,7 +6,15 @@ import { useAuthStore } from "@/store/authStore";
 import StatBox from "../components/StatBox";
 import { FaBox, FaCheckCircle, FaClock, FaTimesCircle } from "react-icons/fa";
 import "./globals.css";
-
+type Phone = {
+  id: string;
+  name: string;
+  brand: string;
+  price: number;
+  description?: string;
+  imageUrl?: string;
+  status?: "active" | "inactive" | "pending";
+};
 export default function HomePage() {
   const { phones, setPhones, removePhone } = useItemStore();
   const { user, setUser } = useAuthStore();
@@ -23,15 +31,15 @@ export default function HomePage() {
   }, [user]);
 // Statistikalar
   const total = phones.length;
-  const active = phones.filter((p: any) => p.status === "active").length;
-  const pending = phones.filter((p: any) => p.status === "pending").length;
-  const inactive = phones.filter((p: any) => p.status === "inactive").length;
-  const avgPrice =
-    phones.length > 0
-      ? Math.round(
-          phones.reduce((sum: number, p: any) => sum + Number(p.price || 0), 0) / phones.length
-        )
-      : 0;
+const active = phones.filter((p: Phone) => p.status === "active").length;
+const pending = phones.filter((p: Phone) => p.status === "pending").length;
+const inactive = phones.filter((p: Phone) => p.status === "inactive").length;
+const avgPrice =
+  phones.length > 0
+    ? Math.round(
+        phones.reduce((sum: number, p: Phone) => sum + Number(p.price || 0), 0) / phones.length
+      )
+    : 0;
   // Telefonları backend-dən gətir
   useEffect(() => {
     const fetchPhones = async () => {

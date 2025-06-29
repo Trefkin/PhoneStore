@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 export interface Phone {
-  id: number;
+  id: string;
   name: string;
   brand: string;
   price: number;
@@ -10,6 +10,7 @@ export interface Phone {
   userId: string;
   createdAt?: string;
   updatedAt?: string;
+  status?: "active" | "inactive" | "pending"; 
 }
 
 interface ItemStore {
@@ -17,7 +18,7 @@ interface ItemStore {
   setPhones: (phones: Phone[]) => void;
   addPhone: (phone: Phone) => void;
   updatePhone: (phone: Phone) => void;
-  removePhone: (id: number) => void;
+  removePhone: (id: string) => void;
 }
 
 export const useItemStore = create<ItemStore>((set) => ({
