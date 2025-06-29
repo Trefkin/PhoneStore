@@ -43,7 +43,7 @@ const avgPrice =
   // Telefonları backend-dən gətir
   useEffect(() => {
     const fetchPhones = async () => {
-      const res = await fetch("http://localhost:5000/api/phones");
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/phones`);
       const data = await res.json();
       setPhones(data);
       console.log(data);
@@ -55,7 +55,7 @@ const avgPrice =
   const handleDelete = async (id: any) => {
     if (!confirm("Silinsin?")) return;
     const token = localStorage.getItem("token");
-    const res = await fetch(`http://localhost:5000/api/phones/${id}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/phones/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -63,7 +63,7 @@ const avgPrice =
     });
     if (res.ok) {
       removePhone(id);
-      const res = await fetch("http://localhost:5000/api/phones");
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/phones`);
       const data = await res.json();
       setPhones(data);
     }

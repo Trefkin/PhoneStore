@@ -26,7 +26,7 @@ export default function EditPhonePage() {
   useEffect(() => {
     const fetchPhone = async () => {
       setFetching(true);
-      const res = await fetch(`http://localhost:5000/api/phones/${params.id}`);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/phones/${params.id}`);
       if (!res.ok) {
         setError("Telefon tapılmadı");
         setFetching(false);
@@ -59,7 +59,7 @@ export default function EditPhonePage() {
       setLoading(false);
       return;
     }
-    const res = await fetch(`http://localhost:5000/api/phones/${params.id}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/phones/${params.id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

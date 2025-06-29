@@ -34,7 +34,7 @@ export default function CreatePhonePage() {
       setLoading(false);
       return;
     }
-    const res = await fetch("http://localhost:5000/api/phones", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/phones`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
