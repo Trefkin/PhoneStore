@@ -1,8 +1,8 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
 
+import { useAuthStore } from "@/store/authStore";
 export default function LoginPage() {
   const router = useRouter();
   const [form, setForm] = useState({ email: "", password: "" });
@@ -31,7 +31,9 @@ export default function LoginPage() {
     }
 
     // Burada token-i localStorage və ya cookie-də saxlaya bilərsiniz
-    localStorage.setItem("token", data.token)
+    localStorage.setItem("token", data.token);
+    useAuthStore.getState().setUser(data.user);
+    localStorage.setItem("user", JSON.stringify(data.user));
     router.push("/");
   };
 

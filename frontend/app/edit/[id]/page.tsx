@@ -1,79 +1,78 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useAuthStore } from "@/store/authStore";
+import { useForm } from "react-hook-form";
+
+type FormValues = {
+  name: string;
+  brand: string;
+  price: number;
+  description?: string;
+  imageUrl?: string;
+};
 
 export default function EditPhonePage() {
   const router = useRouter();
   const params = useParams();
-  const { data: session } = useSession();
-  const [form, setForm] = useState({
-    name: "",
-    brand: "",
-    price: "",
-    description: "",
-    imageUrl: "",
-  });
+  const { user, setUser } = useAuthStore();
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const { register, handleSubmit, reset, formState: { errors } } = useForm<FormValues>();
 
   // Telefon məlumatını gətir
   useEffect(() => {
     const fetchPhone = async () => {
       setFetching(true);
-      const res = await fetch(`/api/items/${params.id}`);
+      const res = await fetch(`http://localhost:5000/api/phones/${params.id}`);
       if (!res.ok) {
         setError("Telefon tapılmadı");
         setFetching(false);
         return;
       }
       const data = await res.json();
-      setForm({
-        name: data.name || "",
-        brand: data.brand || "",
-        price: data.price?.toString() || "",
-        description: data.description || "",
-        imageUrl: data.imageUrl || "",
+      reset({
+        name: data.name,
+        brand: data.brand,
+        price: data.price,
+        description: data.description,
+        imageUrl: data.imageUrl,
       });
       setFetching(false);
     };
-    if (params.id) fetchPhone();
-  }, [params.id]);
+    fetchPhone();
+  }, [params.id, reset]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  useEffect(() => {
+    const userData = localStorage.getItem("user");
+    if (userData) setUser(JSON.parse(userData));
+  }, [setUser]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = async (data: FormValues) => {
     setLoading(true);
     setError(null);
-
-    if (!session?.user || !(session.user as any).id) {
+    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    if (!token) {
       setError("Əvvəlcə daxil olun!");
       setLoading(false);
       return;
     }
-
-    const res = await fetch(`/api/items/${params.id}`, {
+    const res = await fetch(`http://localhost:5000/api/phones/${params.id}`, {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        ...form,
-        price: Number(form.price),
-      }),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
     });
-
-    const data = await res.json();
-
+    const resData = await res.json();
     if (!res.ok) {
-      setError(data.error || "Xəta baş verdi");
+      setError(resData.error || "Xəta baş verdi");
       setLoading(false);
       return;
     }
-
     router.push("/");
   };
 
@@ -88,10 +87,12 @@ export default function EditPhonePage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <form
-        onSubmit={handleSubmit}
+        onSubmit={handleSubmit(onSubmit)}
         className="bg-white p-8 rounded shadow-md w-full max-w-md space-y-6"
       >
-        <h2 className="text-2xl font-bold text-center">Telefonu Redaktə Et</h2>
+        <h2 className="text-2xl font-bold text-center">
+          Telefonu Redaktə Et
+        </h2>
         {error && (
           <div className="bg-red-100 text-red-700 px-3 py-2 rounded text-sm">
             {error}
@@ -101,45 +102,36 @@ export default function EditPhonePage() {
           <label className="block mb-1 text-sm font-medium">Ad</label>
           <input
             type="text"
-            name="name"
-            value={form.name}
-            onChange={handleChange}
-            required
+            {...register("name", { required: "Ad tələb olunur" })}
             className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
             placeholder="Telefon adı"
           />
+          {errors.name && <span className="text-red-500 text-xs">{errors.name.message}</span>}
         </div>
         <div>
           <label className="block mb-1 text-sm font-medium">Brend</label>
           <input
             type="text"
-            name="brand"
-            value={form.brand}
-            onChange={handleChange}
-            required
+            {...register("brand", { required: "Brend tələb olunur" })}
             className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
             placeholder="Məsələn, Apple"
           />
+          {errors.brand && <span className="text-red-500 text-xs">{errors.brand.message}</span>}
         </div>
         <div>
           <label className="block mb-1 text-sm font-medium">Qiymət (AZN)</label>
           <input
             type="number"
-            name="price"
-            value={form.price}
-            onChange={handleChange}
-            required
-            min={1}
+            {...register("price", { required: "Qiymət tələb olunur", min: 1 })}
             className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
             placeholder="Qiymət"
           />
+          {errors.price && <span className="text-red-500 text-xs">{errors.price.message}</span>}
         </div>
         <div>
           <label className="block mb-1 text-sm font-medium">Təsvir</label>
           <textarea
-            name="description"
-            value={form.description}
-            onChange={handleChange}
+            {...register("description")}
             className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
             placeholder="Qısa təsvir (istəyə bağlı)"
             rows={2}
@@ -149,9 +141,7 @@ export default function EditPhonePage() {
           <label className="block mb-1 text-sm font-medium">Şəkil linki</label>
           <input
             type="url"
-            name="imageUrl"
-            value={form.imageUrl}
-            onChange={handleChange}
+            {...register("imageUrl")}
             className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
             placeholder="https://..."
           />
@@ -161,7 +151,7 @@ export default function EditPhonePage() {
           disabled={loading}
           className="w-full bg-blue-600 text-white py-2 rounded font-semibold hover:bg-blue-700 transition"
         >
-          {loading ? "Yüklənir..." : "Yadda saxla"}
+          {loading ? "Yenilənir..." : "Yenilə"}
         </button>
       </form>
     </div>

@@ -24,7 +24,7 @@ export default function Header() {
   };
 
   return (
-    <header className="bg-white shadow mb-6">
+    <header className="bg-white shadow mb-6 px-12">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
         <Link href="/" className="text-xl font-bold text-blue-700">
           Medyanes360
