@@ -1,10 +1,9 @@
-// types/item.ts
+
 export type Phone = {
   _id: string;
-  id?: string; // Optional frontend alias
+  id?: string; 
   userId: {
     _id: string;
-    // other user properties if needed
   };
   name: string;
   brand: string;

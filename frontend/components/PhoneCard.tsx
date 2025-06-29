@@ -40,7 +40,6 @@ export default function PhoneCard({
   onDelete,
   status = "active",
 }: PhoneCardProps) {
-  // İkona məhsul növünə görə dəyişmək üçün nümunə (istəyə görə dəyiş)
   const icon = <FaMobileAlt className="text-xl" />;
 
   const statusObj = statusMap[status] || statusMap.active;

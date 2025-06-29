@@ -31,8 +31,6 @@ export default function RegisterPage() {
       setLoading(false);
       return;
     }
-
-    // Qeydiyyat uğurlu olduqda login səhifəsinə yönləndir
     router.push("/login");
   };
 

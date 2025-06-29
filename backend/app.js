@@ -11,7 +11,7 @@ app.use(cors({
   origin: ["http://localhost:3000","https://medyanes.vercel.app"],
   credentials: true,
 }));
-app.use(express.json()); // <-- Bu mütləq olmalıdır
+app.use(express.json()); 
 
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/phones", require("./routes/phoneRoutes"));

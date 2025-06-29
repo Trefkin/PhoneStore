@@ -30,7 +30,6 @@ export default function LoginPage() {
       return;
     }
 
-    // Burada token-i localStorage və ya cookie-də saxlaya bilərsiniz
     localStorage.setItem("token", data.token);
     useAuthStore.getState().setUser(data.user);
     localStorage.setItem("user", JSON.stringify(data.user));

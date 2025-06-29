@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Menu, X } from "lucide-react"; // burger iconlar üçün
+import { Menu, X } from "lucide-react"; 
 
 export default function Header() {
   const [user, setUser] = useState<{ email: string } | null>(null);

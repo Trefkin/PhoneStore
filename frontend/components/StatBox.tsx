@@ -4,7 +4,7 @@ interface StatBoxProps {
   icon: ReactNode;
   label: string;
   value: number | string;
-  color?: string; // rəng üçün (məs: bg-green-100)
+  color?: string; 
 }
 
 export default function StatBox({ icon, label, value, color = "bg-gray-100" }: StatBoxProps) {
