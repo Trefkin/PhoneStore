@@ -1,7 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "../../../../lib/prisma";
 import { hash } from "bcryptjs";
-
+import { setCorsHeaders } from "../../../../lib/cors";
+export async function OPTIONS() {
+  return new NextResponse(null, {
+    status: 204,
+    headers: setCorsHeaders(),
+  });
+}
 export async function POST(req: NextRequest) {
   try {
     const { email, password } = await req.json();
